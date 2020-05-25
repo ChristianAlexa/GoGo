@@ -10,6 +10,7 @@ import (
 	"strings"
 
 	models "github.com/ChristianAlexa/GoGo/models"
+	validator "github.com/ChristianAlexa/GoGo/validator"
 )
 
 // initBoard creates a go board of any size populated with 'empty' stones
@@ -138,46 +139,57 @@ func main() {
 
 		var rowChoice int
 		var colChoice int
+		var playerChoice models.Intersection
 
-		// prompt player for row choice
+		// continue to prompt row and col choice if choices are invalid
 		for {
 
-			rowInput := promptRowChoice(b)
+			// prompt player for row choice
+			for {
 
-			rowInputInt, err := strconv.Atoi(rowInput)
-			if err != nil {
-				fmt.Println(">> Invalid input")
+				rowInput := promptRowChoice(b)
+
+				rowInputInt, err := strconv.Atoi(rowInput)
+				if err != nil {
+					fmt.Println(">> Invalid input")
+				}
+
+				isValidRow := rowInputInt >= 1 && rowInputInt <= len(b.Intersections)
+
+				if isValidRow {
+					rowChoice = rowInputInt
+					break
+				}
 			}
 
-			isValidRow := rowInputInt >= 1 && rowInputInt <= len(b.Intersections)
+			// prompt player for column choice
+			for {
+				colInput := promptColChoice(b)
 
-			if isValidRow {
-				rowChoice = rowInputInt
+				goMap := map[string]int{"A": 1, "B": 2, "C": 3, "D": 4, "E": 5, "F": 6, "G": 7, "H": 8, "I": 9, "J": 10, "K": 11, "L": 12, "M": 13, "N": 14, "O": 15, "P": 16, "Q": 17, "R": 18, "S": 19}
+				colChoiceInt := goMap[colInput]
+
+				isValidCol := colChoiceInt >= 1 && colChoiceInt <= len(b.Intersections)
+
+				if isValidCol {
+					colChoice = colChoiceInt
+					break
+				}
+
+				fmt.Println("Choose a column letter")
+			}
+
+			playerChoice = models.Intersection{
+				XCoor: rowChoice,
+				YCoor: colChoice,
+				Stone: models.Stone{Color: currentTurnColor, LibertyCount: uint8(4)},
+			}
+
+			if validator.IsEmptyIntersection(b, playerChoice) {
 				break
+			} else {
+				fmt.Println("There is already a stone there!")
 			}
-		}
-
-		// prompt player for column choice
-		for {
-			colInput := promptColChoice(b)
-
-			goMap := map[string]int{"A": 1, "B": 2, "C": 3, "D": 4, "E": 5, "F": 6, "G": 7, "H": 8, "I": 9, "J": 10, "K": 11, "L": 12, "M": 13, "N": 14, "O": 15, "P": 16, "Q": 17, "R": 18, "S": 19}
-			colChoiceInt := goMap[colInput]
-
-			isValidCol := colChoiceInt >= 1 && colChoiceInt <= len(b.Intersections)
-
-			if isValidCol {
-				colChoice = colChoiceInt
-				break
-			}
-
-			fmt.Println("Choose a column letter")
-		}
-
-		playerChoice := models.Intersection{
-			XCoor: rowChoice,
-			YCoor: colChoice,
-			Stone: models.Stone{Color: currentTurnColor, LibertyCount: uint8(4)},
 		}
 
 		playMove(b, playerChoice)
