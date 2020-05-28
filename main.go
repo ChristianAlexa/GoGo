@@ -166,8 +166,8 @@ func main() {
 			for {
 				colInput := promptColChoice(b)
 
-				goMap := map[string]int{"A": 1, "B": 2, "C": 3, "D": 4, "E": 5, "F": 6, "G": 7, "H": 8, "I": 9, "J": 10, "K": 11, "L": 12, "M": 13, "N": 14, "O": 15, "P": 16, "Q": 17, "R": 18, "S": 19}
-				colChoiceInt := goMap[colInput]
+				colMap := map[string]int{"A": 1, "B": 2, "C": 3, "D": 4, "E": 5, "F": 6, "G": 7, "H": 8, "I": 9, "J": 10, "K": 11, "L": 12, "M": 13, "N": 14, "O": 15, "P": 16, "Q": 17, "R": 18, "S": 19}
+				colChoiceInt := colMap[colInput]
 
 				isValidCol := colChoiceInt >= 1 && colChoiceInt <= len(b.Intersections)
 
@@ -185,10 +185,11 @@ func main() {
 				Stone: models.Stone{Color: currentTurnColor, LibertyCount: uint8(4)},
 			}
 
-			if validator.IsEmptyIntersection(b, playerChoice) {
+			isLegalMove := validator.IsEmptyIntersection(b, playerChoice) &&
+				!validator.IsSurroundedByEnemies(b, playerChoice)
+
+			if isLegalMove {
 				break
-			} else {
-				fmt.Println("There is already a stone there!")
 			}
 		}
 

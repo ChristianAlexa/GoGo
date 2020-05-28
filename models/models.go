@@ -28,3 +28,10 @@ type Board struct {
 //     [ Intersection{XCoor YCoor Stone{}}, Intersection{XCoor YCoor Stone{}}],
 // ]
 
+// Neighbors are the immediate neighboring intersections of an intersection
+type Neighbors struct {
+	Above Intersection
+	Below Intersection
+	Left  Intersection
+	Right Intersection
+}
