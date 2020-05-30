@@ -95,9 +95,12 @@ func printBoardUI(b models.Board) {
 func playMove(b models.Board, choice models.Intersection) models.Board {
 	fmt.Printf("\n%s plays at %d %d\n", choice.Stone.Color, choice.XCoor, choice.YCoor)
 
+	rowChoice := choice.XCoor - 1
+	colChoice := choice.YCoor - 1
+
 	// jump to row, jump to column, and update intersection
-	targetRow := b.Intersections[choice.XCoor-1]
-	targetRow[choice.YCoor-1].Stone = choice.Stone
+	targetRow := b.Intersections[rowChoice]
+	targetRow[colChoice].Stone = choice.Stone
 
 	return b
 }
