@@ -18,20 +18,12 @@ type Board struct {
 	Intersections [][]Intersection
 }
 
-// The shape of Board data is a master slice of many row slices that
-// contain Intersection structs.
+// The shape of Board data is a single slice of many row slices that
+// contain Intersection structs. This data shape 'resembles' the actual board.
 //
 // [
-//     [ Intersection{XCoor YCoor Stone{}}, Intersection{XCoor YCoor Stone{}}],
-//     [ Intersection{XCoor YCoor Stone{}}, Intersection{XCoor YCoor Stone{}}],
-//     [ Intersection{XCoor YCoor Stone{}}, Intersection{XCoor YCoor Stone{}}],
-//     [ Intersection{XCoor YCoor Stone{}}, Intersection{XCoor YCoor Stone{}}],
+//     [ Intersection{XCoor YCoor Stone{}}, Intersection{XCoor YCoor Stone{}} ],
+//     [ Intersection{XCoor YCoor Stone{}}, Intersection{XCoor YCoor Stone{}} ],
+//     [ Intersection{XCoor YCoor Stone{}}, Intersection{XCoor YCoor Stone{}} ],
+//     [ Intersection{XCoor YCoor Stone{}}, Intersection{XCoor YCoor Stone{}} ],
 // ]
-
-// Neighbors are the immediate neighboring intersections of an intersection
-type Neighbors struct {
-	Above Intersection
-	Below Intersection
-	Left  Intersection
-	Right Intersection
-}

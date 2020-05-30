@@ -19,8 +19,15 @@ func IsEmptyIntersection(board models.Board, choice models.Intersection) bool {
 	return false
 }
 
-func getNeighbors(board models.Board, choice models.Intersection) models.Neighbors {
-	neighbors := models.Neighbors{}
+// getNeighbors returns a map of neighbors surrounding the chosen intersection
+func getNeighbors(board models.Board, choice models.Intersection) map[string]models.Intersection {
+
+	neighborsMap := map[string]models.Intersection{
+		"ABOVE": {},
+		"BELOW": {},
+		"LEFT":  {},
+		"RIGHT": {},
+	}
 
 	rowChoice := choice.XCoor - 1
 	colChoice := choice.YCoor - 1
@@ -32,7 +39,7 @@ func getNeighbors(board models.Board, choice models.Intersection) models.Neighbo
 	}
 	if !isLeftMostStone {
 		leftNeighbor := board.Intersections[rowChoice][colChoice-1]
-		neighbors.Left = leftNeighbor
+		neighborsMap["LEFT"] = leftNeighbor
 	}
 
 	// get right neighbor interesection
@@ -42,7 +49,7 @@ func getNeighbors(board models.Board, choice models.Intersection) models.Neighbo
 	}
 	if !isRightMostStone {
 		rightNeighbor := board.Intersections[rowChoice][colChoice+1]
-		neighbors.Right = rightNeighbor
+		neighborsMap["RIGHT"] = rightNeighbor
 	}
 
 	// get top neighbor intersection
@@ -52,7 +59,7 @@ func getNeighbors(board models.Board, choice models.Intersection) models.Neighbo
 	}
 	if !isTopRow {
 		aboveNeighbor := board.Intersections[rowChoice-1][colChoice]
-		neighbors.Above = aboveNeighbor
+		neighborsMap["ABOVE"] = aboveNeighbor
 	}
 
 	// get bottom neighbor intersection
@@ -62,33 +69,36 @@ func getNeighbors(board models.Board, choice models.Intersection) models.Neighbo
 	}
 	if !isBottomRow {
 		belowNeighbor := board.Intersections[rowChoice+1][colChoice]
-		neighbors.Below = belowNeighbor
+		neighborsMap["BELOW"] = belowNeighbor
 	}
 
-	return neighbors
+	return neighborsMap
+}
+
+// isEnemyStone returns if 2 stones are the same color or not
+func isEnemyStone(stoneColor1 string, stoneColor2 string) bool {
+
+	if stoneColor1 == "empty" || stoneColor2 == "empty" {
+		return false
+	}
+
+	if stoneColor1 != stoneColor2 {
+		return true
+	}
+
+	return false
 }
 
 // IsSurroundedByEnemies returns if an empty interesection has surrounding enemies
 func IsSurroundedByEnemies(board models.Board, choice models.Intersection) bool {
-
-	n := getNeighbors(board, choice)
+	nMap := getNeighbors(board, choice)
 
 	enemyCount := 0
 
-	if n.Above.Stone.Color != choice.Stone.Color && n.Above.Stone.Color != "empty" {
-		enemyCount++
-	}
-
-	if n.Below.Stone.Color != choice.Stone.Color && n.Below.Stone.Color != "empty" {
-		enemyCount++
-	}
-
-	if n.Left.Stone.Color != choice.Stone.Color && n.Left.Stone.Color != "empty" {
-		enemyCount++
-	}
-
-	if n.Right.Stone.Color != choice.Stone.Color && n.Right.Stone.Color != "empty" {
-		enemyCount++
+	for _, n := range nMap {
+		if isEnemyStone(n.Stone.Color, choice.Stone.Color) {
+			enemyCount++
+		}
 	}
 
 	if enemyCount == 4 {
