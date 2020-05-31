@@ -2,7 +2,6 @@ package main
 
 import (
 	"bufio"
-	"errors"
 	"fmt"
 	"os"
 	"os/exec"
@@ -14,28 +13,29 @@ import (
 )
 
 // initBoard creates a go board of any size populated with 'empty' stones
-func initBoard(boardSize int) (models.Board, error) {
-
-	var err error
+func initBoard(boardSize int) models.Board {
 
 	if !(boardSize == 9 || boardSize == 13 || boardSize == 19) {
-		err = errors.New("Board size must be 9x9, 13x13, or 19x19")
-		fmt.Println(err)
+		fmt.Println(validator.InvalidBoardSize)
 		os.Exit(1)
 	}
 
 	var intersections = make([][]models.Intersection, boardSize)
-	var ret = models.Board{Intersections: intersections}
+	var ret = models.Board{
+		Intersections: intersections,
+		WhiteGroups:   models.Group{},
+		BlackGroups:   models.Group{},
+	}
 
 	for i := 0; i < boardSize; i++ {
 		for j := 0; j < boardSize; j++ {
-			st := models.Stone{Color: "empty", LibertyCount: uint8(4)}
-			intersection := models.Intersection{XCoor: (i + 1), YCoor: j, Stone: st}
+			st := models.Stone{Color: "empty", LibertyCount: 4}
+			intersection := models.Intersection{XCoor: i + 1, YCoor: j, Stone: st}
 			intersections[i] = append(intersections[i], intersection)
 		}
 	}
 
-	return ret, err
+	return ret
 }
 
 // printBoardUI prints each row as a new line to the console
@@ -131,10 +131,7 @@ func main() {
 	currentTurnColor := "black"
 
 	// TODO: prompt user for what size game they want to play
-	b, err := initBoard(19)
-	if err != nil {
-		fmt.Println(err)
-	}
+	b := initBoard(19)
 
 	printBoardUI(b)
 
@@ -185,7 +182,7 @@ func main() {
 			playerChoice = models.Intersection{
 				XCoor: rowChoice,
 				YCoor: colChoice,
-				Stone: models.Stone{Color: currentTurnColor, LibertyCount: uint8(4)},
+				Stone: models.Stone{Color: currentTurnColor, LibertyCount: 4},
 			}
 
 			isLegalMove := validator.IsEmptyIntersection(b, playerChoice) &&

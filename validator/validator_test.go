@@ -12,19 +12,21 @@ func TestIsEmptyIntersection(t *testing.T) {
 		mockIntersection := models.Intersection{
 			XCoor: 1,
 			YCoor: 1,
-			Stone: models.Stone{Color: "empty", LibertyCount: uint8(4)},
+			Stone: models.Stone{Color: "empty", LibertyCount: 4},
 		}
 
 		mockRow := []models.Intersection{mockIntersection}
 
 		mockBoard := models.Board{
 			Intersections: [][]models.Intersection{mockRow},
+			WhiteGroups:   models.Group{},
+			BlackGroups:   models.Group{},
 		}
 
 		mockChoice := models.Intersection{
 			XCoor: 1,
 			YCoor: 1,
-			Stone: models.Stone{Color: "white", LibertyCount: uint8(4)},
+			Stone: models.Stone{Color: "white", LibertyCount: 4},
 		}
 
 		actual := IsEmptyIntersection(mockBoard, mockChoice)
@@ -39,19 +41,21 @@ func TestIsEmptyIntersection(t *testing.T) {
 		mockIntersection := models.Intersection{
 			XCoor: 1,
 			YCoor: 1,
-			Stone: models.Stone{Color: "white", LibertyCount: uint8(4)},
+			Stone: models.Stone{Color: "white", LibertyCount: 4},
 		}
 
 		mockRow := []models.Intersection{mockIntersection} // [ {XCoor, YCoor, Stone} ]
 
 		mockBoard := models.Board{
 			Intersections: [][]models.Intersection{mockRow},
+			WhiteGroups:   models.Group{},
+			BlackGroups:   models.Group{},
 		}
 
 		mockChoice := models.Intersection{
 			XCoor: 1,
 			YCoor: 1,
-			Stone: models.Stone{Color: "white", LibertyCount: uint8(4)},
+			Stone: models.Stone{Color: "white", LibertyCount: 4},
 		}
 
 		actual := IsEmptyIntersection(mockBoard, mockChoice)

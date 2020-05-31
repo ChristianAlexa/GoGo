@@ -3,7 +3,7 @@ package models
 // Stone is a go stone that can either be white, black, or empty
 type Stone struct {
 	Color        string
-	LibertyCount uint8
+	LibertyCount int
 }
 
 // Intersection is where a stone is placed
@@ -13,17 +13,15 @@ type Intersection struct {
 	Stone Stone
 }
 
+// Group is a collection of friendly stones that are touching
+type Group struct {
+	Intersections []Intersection
+	LibertyCount  int
+}
+
 // Board contains the intersections data
 type Board struct {
 	Intersections [][]Intersection
+	WhiteGroups   Group
+	BlackGroups   Group
 }
-
-// The shape of Board data is a single slice of many row slices that
-// contain Intersection structs. This data shape 'resembles' the actual board.
-//
-// [
-//     [ Intersection{XCoor YCoor Stone{}}, Intersection{XCoor YCoor Stone{}} ],
-//     [ Intersection{XCoor YCoor Stone{}}, Intersection{XCoor YCoor Stone{}} ],
-//     [ Intersection{XCoor YCoor Stone{}}, Intersection{XCoor YCoor Stone{}} ],
-//     [ Intersection{XCoor YCoor Stone{}}, Intersection{XCoor YCoor Stone{}} ],
-// ]
