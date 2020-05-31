@@ -9,13 +9,13 @@ import (
 // IsEmptyIntersection returns if there's an empty space for a stone
 func IsEmptyIntersection(board models.Board, choice models.Intersection) bool {
 
-	intersec := board.Intersections[choice.XCoor-1][choice.YCoor-1]
+	chosenIntersection := board.Intersections[choice.XCoor-1][choice.YCoor-1]
 
-	if intersec.Stone.Color == "empty" {
+	if chosenIntersection.Stone.Color == "empty" {
 		return true
 	}
 
-	fmt.Println("There's already a stone there")
+	fmt.Println(IntersectionOccupied)
 	return false
 }
 
@@ -32,7 +32,7 @@ func getNeighbors(board models.Board, choice models.Intersection) map[string]mod
 	rowChoice := choice.XCoor - 1
 	colChoice := choice.YCoor - 1
 
-	// get left neighbor interesection
+	// get left neighbor intersection
 	isLeftMostStone := false
 	if colChoice == 0 {
 		isLeftMostStone = true
@@ -42,7 +42,7 @@ func getNeighbors(board models.Board, choice models.Intersection) map[string]mod
 		neighborsMap["LEFT"] = leftNeighbor
 	}
 
-	// get right neighbor interesection
+	// get right neighbor intersection
 	isRightMostStone := false
 	if colChoice == len(board.Intersections)-1 {
 		isRightMostStone = true
@@ -89,7 +89,7 @@ func isEnemyStone(stoneColor1 string, stoneColor2 string) bool {
 	return false
 }
 
-// IsSurroundedByEnemies returns if an empty interesection has surrounding enemies
+// IsSurroundedByEnemies returns if an empty intersection has surrounding enemies
 func IsSurroundedByEnemies(board models.Board, choice models.Intersection) bool {
 	nMap := getNeighbors(board, choice)
 
@@ -102,7 +102,7 @@ func IsSurroundedByEnemies(board models.Board, choice models.Intersection) bool 
 	}
 
 	if enemyCount == 4 {
-		fmt.Println("illegal placement: no liberties available.")
+		fmt.Println(NoLibertiesAvailable)
 		return true
 	}
 
