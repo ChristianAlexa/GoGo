@@ -19,8 +19,8 @@ func TestIsEmptyIntersection(t *testing.T) {
 
 		mockBoard := models.Board{
 			Intersections: [][]models.Intersection{mockRow},
-			WhiteGroups:   models.Group{},
-			BlackGroups:   models.Group{},
+			WhiteGroups:   []models.Group{},
+			BlackGroups:   []models.Group{},
 		}
 
 		mockChoice := models.Intersection{
@@ -48,8 +48,8 @@ func TestIsEmptyIntersection(t *testing.T) {
 
 		mockBoard := models.Board{
 			Intersections: [][]models.Intersection{mockRow},
-			WhiteGroups:   models.Group{},
-			BlackGroups:   models.Group{},
+			WhiteGroups:   []models.Group{},
+			BlackGroups:   []models.Group{},
 		}
 
 		mockChoice := models.Intersection{

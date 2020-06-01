@@ -3,12 +3,13 @@ package main
 import (
 	"bufio"
 	"fmt"
-	"go.uber.org/zap"
 	"log"
 	"os"
 	"os/exec"
 	"strconv"
 	"strings"
+
+	"go.uber.org/zap"
 
 	models "github.com/ChristianAlexa/GoGo/models"
 	validator "github.com/ChristianAlexa/GoGo/validator"
@@ -21,8 +22,8 @@ func initBoard(boardSize int, logger zap.Logger) models.Board {
 	var intersections = make([][]models.Intersection, boardSize)
 	var ret = models.Board{
 		Intersections: intersections,
-		WhiteGroups:   models.Group{},
-		BlackGroups:   models.Group{},
+		WhiteGroups:   []models.Group{},
+		BlackGroups:   []models.Group{},
 	}
 
 	for i := 0; i < boardSize; i++ {
@@ -214,6 +215,27 @@ func main() {
 				!validator.IsSurroundedByEnemies(b, playerChoice)
 
 			if isLegalMove {
+				// update friendly group and update board
+				friendlyNeighbors := validator.GetFriendlyNeighbors(b, playerChoice)
+
+				if len(friendlyNeighbors) > 0 {
+					friendlyGroup := append(friendlyNeighbors, playerChoice)
+					// TODO: getGroupLibertyCount()
+					// Until this func exists, I'm just using 55 as a random placeholder
+					newGroup := models.Group{Intersections: friendlyGroup, LibertyCount: 55}
+
+					switch playerChoice.Stone.Color {
+					case "white":
+						// TODO: overwrite existing groups and merge groups
+						b.WhiteGroups = append(b.WhiteGroups, newGroup)
+					case "blacK":
+						b.BlackGroups = append(b.BlackGroups, newGroup)
+					default:
+						// no groups to update
+					}
+				} else {
+					fmt.Println("no friendly neighbors found")
+				}
 				break
 			}
 		}

@@ -89,6 +89,20 @@ func isEnemyStone(stoneColor1 string, stoneColor2 string) bool {
 	return false
 }
 
+// isFriendlyStone returns if 2 stones are the same color or not
+func isFriendlyStone(stoneColor1 string, stoneColor2 string) bool {
+
+	if stoneColor1 == "empty" || stoneColor2 == "empty" {
+		return false
+	}
+
+	if stoneColor1 == stoneColor2 {
+		return true
+	}
+
+	return false
+}
+
 // IsSurroundedByEnemies returns if an empty intersection has surrounding enemies
 func IsSurroundedByEnemies(board models.Board, choice models.Intersection) bool {
 	nMap := getNeighbors(board, choice)
@@ -107,4 +121,19 @@ func IsSurroundedByEnemies(board models.Board, choice models.Intersection) bool 
 	}
 
 	return false
+}
+
+// GetFriendlyNeighbors returns a slice of neighbors that are of the same color as the player's choice
+func GetFriendlyNeighbors(board models.Board, choice models.Intersection) []models.Intersection {
+
+	var friendlyNeighbors []models.Intersection
+
+	nMap := getNeighbors(board, choice)
+	for _, n := range nMap {
+		if isFriendlyStone(n.Stone.Color, choice.Stone.Color) {
+			friendlyNeighbors = append(friendlyNeighbors, n)
+		}
+	}
+
+	return friendlyNeighbors
 }

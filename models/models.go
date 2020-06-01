@@ -22,6 +22,6 @@ type Group struct {
 // Board contains the intersections data
 type Board struct {
 	Intersections [][]Intersection
-	WhiteGroups   Group
-	BlackGroups   Group
+	WhiteGroups   []Group
+	BlackGroups   []Group
 }
