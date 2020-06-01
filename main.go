@@ -3,6 +3,8 @@ package main
 import (
 	"bufio"
 	"fmt"
+	"go.uber.org/zap"
+	"log"
 	"os"
 	"os/exec"
 	"strconv"
@@ -13,7 +15,9 @@ import (
 )
 
 // initBoard creates a go board of any size populated with 'empty' stones
-func initBoard(boardSize int) models.Board {
+func initBoard(boardSize int, logger zap.Logger) models.Board {
+
+	logger.Info("initializing board")
 
 	if !(boardSize == 9 || boardSize == 13 || boardSize == 19) {
 		fmt.Println(validator.InvalidBoardSize)
@@ -116,7 +120,7 @@ func promptRowChoice(b models.Board) string {
 }
 
 // promptColChoice prompts the user for the column they would like to play
-func promptColChoice(b models.Board) string {
+func promptColChoice() string {
 	fmt.Println("pick col:")
 	reader := bufio.NewReader(os.Stdin)
 	input, _ := reader.ReadString('\n')
@@ -127,11 +131,17 @@ func promptColChoice(b models.Board) string {
 
 func main() {
 
+	logger, err := zap.NewProduction()
+	if err != nil {
+		log.Fatal("can't initialize zap logger")
+	}
+	defer logger.Sync()
+
 	hasWinner := false
 	currentTurnColor := "black"
 
 	// TODO: prompt user for what size game they want to play
-	b := initBoard(19)
+	b := initBoard(19, *logger)
 
 	printBoardUI(b)
 
@@ -164,7 +174,7 @@ func main() {
 
 			// prompt player for column choice
 			for {
-				colInput := promptColChoice(b)
+				colInput := promptColChoice()
 
 				colMap := map[string]int{"A": 1, "B": 2, "C": 3, "D": 4, "E": 5, "F": 6, "G": 7, "H": 8, "I": 9, "J": 10, "K": 11, "L": 12, "M": 13, "N": 14, "O": 15, "P": 16, "Q": 17, "R": 18, "S": 19}
 				colChoiceInt := colMap[colInput]
