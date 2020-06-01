@@ -16,13 +16,7 @@ import (
 
 // initBoard creates a go board of any size populated with 'empty' stones
 func initBoard(boardSize int, logger zap.Logger) models.Board {
-
 	logger.Info("initializing board")
-
-	if !(boardSize == 9 || boardSize == 13 || boardSize == 19) {
-		fmt.Println(validator.InvalidBoardSize)
-		os.Exit(1)
-	}
 
 	var intersections = make([][]models.Intersection, boardSize)
 	var ret = models.Board{
@@ -109,6 +103,17 @@ func playMove(b models.Board, choice models.Intersection) models.Board {
 	return b
 }
 
+// promptBoardSize prompts the user for the board size they would like to play
+func promptBoardSize() int {
+	fmt.Println(">> Choose a board size (9, 13, or 19)")
+	reader := bufio.NewReader(os.Stdin)
+	input, _ := reader.ReadString('\n')
+	input = strings.Replace(input, "\n", "", -1)
+	inputInt, _ := strconv.Atoi(input)
+
+	return inputInt
+}
+
 // promptRowChoice prompts the user for the row they would like to play
 func promptRowChoice(b models.Board) string {
 	fmt.Println(">> Choose a row number between 1 and", len(b.Intersections))
@@ -121,7 +126,7 @@ func promptRowChoice(b models.Board) string {
 
 // promptColChoice prompts the user for the column they would like to play
 func promptColChoice() string {
-	fmt.Println("pick col:")
+	fmt.Println(">> Pick column")
 	reader := bufio.NewReader(os.Stdin)
 	input, _ := reader.ReadString('\n')
 	input = strings.Replace(input, "\n", "", -1)
@@ -139,9 +144,19 @@ func main() {
 
 	hasWinner := false
 	currentTurnColor := "black"
+	var boardSize int
 
-	// TODO: prompt user for what size game they want to play
-	b := initBoard(19, *logger)
+	// prompt player for board size
+	for {
+		boardSizeChoice := promptBoardSize()
+		if boardSizeChoice == 9 || boardSizeChoice == 13 || boardSizeChoice == 19 {
+			boardSize = boardSizeChoice
+			break
+		}
+		fmt.Println(validator.InvalidBoardSize)
+	}
+
+	b := initBoard(boardSize, *logger)
 
 	printBoardUI(b)
 
