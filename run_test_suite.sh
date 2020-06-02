@@ -15,3 +15,6 @@ go vet "${SCRIPT_DIR}"/...
 echo "running go test..."
 go test -v "${SCRIPT_DIR}"/...
 
+echo "displaying test coverage..."
+go tool cover -func=c.out
+
