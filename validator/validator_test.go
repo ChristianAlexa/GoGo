@@ -3,7 +3,7 @@ package validator
 import (
 	"testing"
 
-	models "github.com/ChristianAlexa/GoGo/models"
+	"github.com/ChristianAlexa/GoGo/models"
 )
 
 func TestIsEmptyIntersection(t *testing.T) {
@@ -190,6 +190,53 @@ func TestIsFriendlyStone(t *testing.T) {
 
 		if actual != expected {
 			t.Errorf("got %v and expected %v", actual, expected)
+		}
+	})
+}
+
+func TestGetNeighbors(t *testing.T) {
+	t.Run("Should return neighbors directly surrounding a player intersection choice", func(t *testing.T) {
+
+		boardSize := 19
+		var intersections = make([][]models.Intersection, boardSize)
+		mockBoard := models.Board{
+			Intersections: intersections,
+			WhiteGroups:   []models.Group{},
+			BlackGroups:   []models.Group{},
+		}
+
+		for i := 0; i < boardSize; i++ {
+			for j := 0; j < boardSize; j++ {
+				st := models.Stone{Color: "empty", LibertyCount: 4}
+				intersection := models.Intersection{XCoor: i + 1, YCoor: j, Stone: st}
+				intersections[i] = append(intersections[i], intersection)
+			}
+		}
+
+		mockChoice := models.Intersection{
+			XCoor: 4,
+			YCoor: 4,
+			Stone: models.Stone{Color: "white", LibertyCount: 4},
+		}
+
+		actual := getNeighbors(mockBoard, mockChoice)
+		expected := map[string]models.Intersection{
+			"ABOVE": {XCoor: 3, YCoor: 3, Stone: models.Stone{Color: "empty", LibertyCount: 4}},
+			"BELOW": {XCoor: 5, YCoor: 3, Stone: models.Stone{Color: "empty", LibertyCount: 4}},
+			"LEFT":  {XCoor: 4, YCoor: 2, Stone: models.Stone{Color: "empty", LibertyCount: 4}},
+			"RIGHT": {XCoor: 4, YCoor: 4, Stone: models.Stone{Color: "empty", LibertyCount: 4}},
+		}
+		if actual["ABOVE"] != expected["ABOVE"] {
+			t.Errorf("got %v and expected %v", actual["ABOVE"], expected["ABOVE"])
+		}
+		if actual["BELOW"] != expected["BELOW"] {
+			t.Errorf("got %v and expected %v", actual["BELOW"], expected["BELOW"])
+		}
+		if actual["LEFT"] != expected["LEFT"] {
+			t.Errorf("got %v and expected %v", actual["LEFT"], expected["LEFT"])
+		}
+		if actual["RIGHT"] != expected["RIGHT"] {
+			t.Errorf("got %v and expected %v", actual["RIGHT"], expected["RIGHT"])
 		}
 	})
 }

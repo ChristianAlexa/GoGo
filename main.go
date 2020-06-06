@@ -228,7 +228,7 @@ func main() {
 					case "white":
 						// TODO: overwrite existing groups and merge groups
 						b.WhiteGroups = append(b.WhiteGroups, newGroup)
-					case "blacK":
+					case "black":
 						b.BlackGroups = append(b.BlackGroups, newGroup)
 					default:
 						// no groups to update
